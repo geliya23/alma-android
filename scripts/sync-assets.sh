@@ -530,11 +530,14 @@ print('✓ connected chunk → 迷你 boot（装桥不渲染）')
 
 # 入口注入：<head> 里 entry 模块之前加载 connected 模块（同为 deferred，按序执行；
 # shim 是 body 里的非延迟脚本，仍最先执行 → ??= 以 shim 为准）
+_cc = sorted(_g.glob('www/assets/connected-*.js'))
+assert len(_cc) == 1, 'connected chunk 定位失败: %r' % (_cc,)
+_cname = _cc[0].split('/')[-1]
 for p in ['www/index.html', 'www/settings.html']:
     s = open(p, encoding='utf-8').read()
-    if 'connected-D8mcBngn.js' in s:
+    if _cname in s:
         continue
-    tag = '<script type="module" crossorigin src="./assets/connected-D8mcBngn.js"></script>'
+    tag = '<script type="module" crossorigin src="./assets/%s"></script>' % _cname
     m = re.search(r'<script type="module"[^>]*src="[^"]*"', s)
     s = s[:m.start()] + tag + '\n  ' + s[m.start():]
     open(p, 'w', encoding='utf-8').write(s)

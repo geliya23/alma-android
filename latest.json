@@ -1,9 +1,9 @@
 {
-  "tag": "v0.4.213-13",
-  "apk": "alma-android-v0.4.213-13.apk",
-  "notes": "手机顶栏适配：顶栏按钮触控尺寸 44px、图标 20px（不再随 UI 字体缩放变小）；资源按钮归位右上角、标题左对齐让位不再被遮挡；仅改手机壳分支，桌面路径零改动（修复 #1，PR #2）",
+  "tag": "v0.4.259-14",
+  "apk": "alma-android-v0.4.259-14.apk",
+  "notes": "renderer 升级到 0.4.259（手机端可见 herdr 工作区/agent）；修复设置页白屏（connected chunk 404）、扫码提示「不是 Alma 的二维码」、粘贴配对链接报剪贴板为空",
   "mirrors": [
-    "https://gh-proxy.com/https://github.com/nanami-0713/alma-android/releases/download/v0.4.213-13/alma-android-v0.4.213-13.apk",
-    "https://ghfast.top/https://github.com/nanami-0713/alma-android/releases/download/v0.4.213-13/alma-android-v0.4.213-13.apk"
+    "https://gh-proxy.com/https://github.com/geliya23/alma-android/releases/download/v0.4.259-14/alma-android-v0.4.259-14.apk",
+    "https://ghfast.top/https://github.com/geliya23/alma-android/releases/download/v0.4.259-14/alma-android-v0.4.259-14.apk"
   ]
 }

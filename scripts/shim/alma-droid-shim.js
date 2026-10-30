@@ -372,6 +372,39 @@
     }
   };
 
+  // 但 renderer 的「粘贴配对链接」直接调 navigator.clipboard.readText()，
+  // 不经过 electronClipboard（0.4.259 实测），Android WebView 里该 API 恒抛
+  // NotAllowedError → 界面报「剪贴板为空，请先在 Mac 上复制链接」。这里把
+  // navigator.clipboard 本身改接到 Capacitor Clipboard，patch 才真正生效。
+  (function () {
+    var C0 = capPlugin("Clipboard");
+    var nc = navigator.clipboard;
+    if (!nc && !C0) return;
+    if (!nc) {
+      nc = {};
+      try {
+        Object.defineProperty(navigator, "clipboard", {
+          configurable: true, get: function () { return nc; }
+        });
+      } catch (e) {
+        try { navigator.clipboard = nc; } catch (e2) { return; }
+      }
+    }
+    var origRead = typeof nc.readText === "function" ? nc.readText.bind(nc) : null;
+    var origWrite = typeof nc.writeText === "function" ? nc.writeText.bind(nc) : null;
+    nc.readText = function () {
+      var C = capPlugin("Clipboard");
+      if (C) return C.read().then(function (r) { return (r && r.value) || ""; }).catch(function () { return ""; });
+      return origRead ? origRead() : Promise.resolve("");
+    };
+    nc.writeText = function (t) {
+      var C = capPlugin("Clipboard");
+      if (C) return C.write({ string: String(t == null ? "" : t) });
+      return origWrite ? origWrite(t) : Promise.resolve();
+    };
+  })();
+
+
   // ── 应用内自更新：把 renderer 自带的 updater UI 接到真实现 ─────────
   // renderer 的 AboutSettings / 桌面 badge 全部走 window.almaApp 的
   // autoUpdate 协议（getInfo.autoUpdateSupported / checkForUpdates /
@@ -380,7 +413,7 @@
   // 镜像 raw latest.json）→ 原生 DownloadManager 下载（通知栏可见）→
   // FileProvider 拉起系统安装器（__almaAndroidUpdate 桥）。
   var UPDATE = {
-    repo: "nanami-0713/alma-android",
+    repo: "geliya23/alma-android",
     branch: "main",
     mirrorKey: "alma.android.update.mirror",   // 空串 = 显式禁用镜像
     checkedKey: "alma.android.update.checkedAt",
