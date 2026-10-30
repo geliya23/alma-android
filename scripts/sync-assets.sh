@@ -81,7 +81,10 @@ PYEOF
 # 会被长模型名（如 Deepseek-V3.2-Exp）撑死，行总宽超出屏宽，把 shrink-0 的
 # 圆形发送按钮挤出屏幕右缘切半。加 min-w-0 让 chip 收缩（span 自带 truncate）。
 python3 - << 'PYEOF'
-p = 'www/assets/App-CHUt1SP7.js'
+import glob as _g
+_c = sorted(_g.glob('www/assets/App-*.js'))
+assert len(_c) == 1, 'App chunk 定位失败: %r' % (_c,)
+p = _c[0]
 s = open(p, encoding='utf-8').read()
 OLD = 'const chip = "flex h-9 max-w-[46vw] '
 NEW = 'const chip = "flex h-9 min-w-0 max-w-[46vw] '
@@ -99,7 +102,10 @@ PYEOF
 # 两个 gutter 都不该留：行内边距改 px-2，外层 paddingRight 归零。
 # isPhoneShell() 为假（桌面/connected）时字符串原样，零回归。
 python3 - << 'PYEOF'
-p = 'www/assets/App-CHUt1SP7.js'
+import glob as _g
+_c = sorted(_g.glob('www/assets/App-*.js'))
+assert len(_c) == 1, 'App chunk 定位失败: %r' % (_c,)
+p = _c[0]
 s = open(p, encoding='utf-8').read()
 n = 0
 
@@ -124,7 +130,10 @@ PYEOF
 # 抽屉点进来说明列表必然已加载），进入瞬间标题栏就有内容；线程数据到
 # 达后自然替换。仅手机壳生效。
 python3 - << 'PYEOF'
-p = 'www/assets/App-CHUt1SP7.js'
+import glob as _g
+_c = sorted(_g.glob('www/assets/App-*.js'))
+assert len(_c) == 1, 'App chunk 定位失败: %r' % (_c,)
+p = _c[0]
 s = open(p, encoding='utf-8').read()
 
 OLD = 'const chatThreadInfo = reactExports.useMemo(\n    () => currentThread ? {'
@@ -500,7 +509,10 @@ PYEOF
 python3 - << 'PYEOF'
 import re
 
-p = 'www/assets/connected-D8mcBngn.js'
+import glob as _g
+_c = sorted(_g.glob('www/assets/connected-*.js'))
+assert len(_c) == 1, 'connected chunk 定位失败: %r' % (_c,)
+p = _c[0]
 s = open(p, encoding='utf-8').read()
 MINI_BOOT = '''// alma-android: 手机迷你 boot —— 只装桥，不做 connected 桌面渲染/hash 配对。
 installElectronShim();

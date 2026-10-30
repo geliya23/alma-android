@@ -32,7 +32,10 @@ main-titlebar-frame 拿不到高度 → 只剩 absolute 子元素 → 高度 0�
 """
 import sys
 
-P = 'www/assets/App-CHUt1SP7.js'
+import glob as _g
+_c = sorted(_g.glob('www/assets/App-*.js'))
+assert len(_c) == 1, 'App chunk 定位失败: %r' % (_c,)
+P = _c[0]
 s = open(P, encoding='utf-8').read()
 n = 0
 
