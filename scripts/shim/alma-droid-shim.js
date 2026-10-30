@@ -878,4 +878,37 @@
   window.moreMenu ??= { show: noop, hide: noop };
   window.selectDirectory ??= rejecter("selectDirectory");
   window.getPathForFile ??= function (f) { return f && f.name; };
+
+  // ── 配对桥修复（2026-10-30）─────────────────────────────────────────
+  // 问题一：renderer 的 PhoneSettings 用 `const cfg = window.almaIOSConfig` 做校验，
+  //   但 shim 此前从未提供该对象 → cfg 为 undefined → 扫码恒判「不是 Alma 二维码」。
+  //   只在 iframe（settings）里补 isPairingLink；主帧不能抢先占位，否则 renderer
+  //   自己的 `window.almaIOSConfig ??=` 会跳过，丢掉真正的 applyPairingLink。
+  // 问题二：sync-assets.sh 补丁 2.8 把配对 postMessage 转发给主帧，但没人监听。
+  function parseAlmaPairing(raw) {
+    var u;
+    try { u = new URL(String(raw).trim()); } catch (e) { return null; }
+    if (u.protocol !== "alma:") return null;
+    if ((u.hostname || u.pathname.replace(/^\/+/, "")) !== "connect") return null;
+    var target = u.searchParams.get("u");
+    if (!target || !/^https?:\/\//.test(target)) return null;
+    return { target: target, e2e: u.searchParams.get("e2e") === "1", code: u.searchParams.get("k") || "" };
+  }
+
+  var __almaIsFrame = !!(window.parent && window.parent !== window);
+  if (__almaIsFrame) {
+    window.almaIOSConfig = window.almaIOSConfig || {};
+    if (typeof window.almaIOSConfig.isPairingLink !== "function") {
+      window.almaIOSConfig.isPairingLink = function (link) { return parseAlmaPairing(link) !== null; };
+    }
+  } else {
+    window.addEventListener("message", function (e) {
+      var d = e && e.data;
+      if (!d || d.type !== "alma-android-apply-pairing" || !d.link) return;
+      var cfg = window.almaIOSConfig;
+      if (cfg && typeof cfg.applyPairingLink === "function") {
+        try { void cfg.applyPairingLink(String(d.link)); } catch (err) {}
+      }
+    });
+  }
 })();
