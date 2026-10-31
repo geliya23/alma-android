@@ -182,6 +182,11 @@
       return json(s);
     }
 
+    // 会话列表：本机模式 v1 无本地生成（见文件头），会话跑在 Mac 上 —— 返回空列表
+    // 即可。缺这条时 NewChatThreadManager 启动即 GET /api/threads → 501 反复抛
+    // "Failed to get threads"，列表视图每次启动都报错。
+    if (method === "GET" && path === "/api/threads") return json([]);
+
     return err("local engine: 未实现 " + method + " " + path, 501);
   }
 

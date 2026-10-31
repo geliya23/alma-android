@@ -1,9 +1,9 @@
 {
-  "tag": "v0.4.259-14",
-  "apk": "alma-android-v0.4.259-14.apk",
-  "notes": "renderer 升级到 0.4.259（手机端可见 herdr 工作区/agent）；修复设置页白屏（connected chunk 404）、扫码提示「不是 Alma 的二维码」、粘贴配对链接报剪贴板为空",
+  "tag": "v0.4.259-15",
+  "apk": "alma-android-v0.4.259-15.apk",
+  "notes": "本机模式修复：会话列表启动即报「Failed to get threads」（/api/threads 未实现 → 501），改为返回空列表；sha256 校验文件随 Release 发布",
   "mirrors": [
-    "https://gh-proxy.com/https://github.com/geliya23/alma-android/releases/download/v0.4.259-14/alma-android-v0.4.259-14.apk",
-    "https://ghfast.top/https://github.com/geliya23/alma-android/releases/download/v0.4.259-14/alma-android-v0.4.259-14.apk"
+    "https://gh-proxy.com/https://github.com/geliya23/alma-android/releases/download/v0.4.259-15/alma-android-v0.4.259-15.apk",
+    "https://ghfast.top/https://github.com/geliya23/alma-android/releases/download/v0.4.259-15/alma-android-v0.4.259-15.apk"
   ]
 }
